@@ -1546,13 +1546,12 @@ EXPORT_SYMBOL(get_random_bytes);
  * Returns: 0 if the urandom pool has been seeded.
  *          -ERESTARTSYS if the function was interrupted by a signal.
  */
-int wait_for_random_bytes(void)
+static int wait_for_random_bytes(void)
 {
 	if (likely(crng_ready()))
 		return 0;
 	return wait_event_interruptible(crng_init_wait, crng_ready());
 }
-EXPORT_SYMBOL(wait_for_random_bytes);
 
 /*
  * Add a callback function that will be invoked when the nonblocking
@@ -2127,7 +2126,7 @@ u64 get_random_u64(void)
 EXPORT_SYMBOL(get_random_u64);
 
 static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u32);
-u32 get_random_u32(void)
+u32 __get_random_u32(void)
 {
 	u32 ret;
 	bool use_lock;
@@ -2154,7 +2153,6 @@ u32 get_random_u32(void)
 	put_cpu_var(batched_entropy_u32);
 	return ret;
 }
-EXPORT_SYMBOL(get_random_u32);
 
 /* It's important to invalidate all potential batched entropy that might
  * be stored before the crng is initialized, which we can do lazily by

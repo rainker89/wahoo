@@ -23,7 +23,6 @@ extern void add_input_randomness(unsigned int type, unsigned int code,
 extern void add_interrupt_randomness(int irq, int irq_flags);
 
 extern void get_random_bytes(void *buf, int nbytes);
-extern int wait_for_random_bytes(void);
 extern int add_random_ready_callback(struct random_ready_callback *rdy);
 extern void del_random_ready_callback(struct random_ready_callback *rdy);
 extern void get_random_bytes_arch(void *buf, int nbytes);
@@ -32,11 +31,11 @@ extern void get_random_bytes_arch(void *buf, int nbytes);
 extern const struct file_operations random_fops, urandom_fops;
 #endif
 
-u32 get_random_u32(void);
+u32 __get_random_u32(void);
 u64 get_random_u64(void);
 static inline unsigned int get_random_int(void)
 {
-	return get_random_u32();
+	return __get_random_u32();
 }
 static inline unsigned long get_random_long(void)
 {
